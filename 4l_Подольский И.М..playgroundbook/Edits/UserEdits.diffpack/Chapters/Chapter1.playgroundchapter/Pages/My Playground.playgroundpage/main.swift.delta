@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Diff</key>
+	<array>
+		<dict>
+			<key>ModifiedContent</key>
+			<string>
+
+class Car {
+    let mark: String
+    let year: Int
+    var windows: WindowsStatus
+    var engine: EngineStatus
+    var trunkVolume: Int
+    var freeVolume: Int = 0
+    
+    enum WindowsStatus: String {
+        case open = "окна открыты"
+        case closed = "окан закрыты"
+    }
+    
+    enum EngineStatus: String {
+        case off = "двигатель заглушен"
+        case on = "двигатель заведен"
+    }
+    
+    func loadCargo(cargo: Int) { // Добавление груза
+        freeVolume = trunkVolume
+        if cargo &lt;= freeVolume {
+            freeVolume -= cargo
+            print ("Объем уменьшился на \(cargo) литров. Свободно \(freeVolume) | \(trunkVolume)")
+        } else {
+            print ("Груз не поместиться. Вы можете загрузить не больше \(freeVolume) литров")
+        }
+    }
+    
+    func unloadСargo(cargo: Int) { //разгрузка
+        var occupiedVolume = trunkVolume - freeVolume
+        if cargo &lt;= occupiedVolume{
+            freeVolume += cargo
+            occupiedVolume -= cargo
+            print ("Объем увеличился на \(cargo) литров. Свободно \(freeVolume) | \(trunkVolume)")
+        } else {
+            freeVolume += occupiedVolume
+            print ("Багажник полность свободен. Свободный объем багажа \(freeVolume) литров")
+        }
+    }
+    
+    func actionWindows() {
+        switch windows {
+        case .open:
+            self.windows = .closed
+            print ("Вы закрыли окна")
+            case .closed:
+                self.windows = .open
+                print ("Вы открыли окна")
+        }
+    }
+    
+    func actionEngine(){
+        switch engine {
+        case .off:
+            self.engine = .on 
+            print ("Вы завели движок")
+            case .on:
+                self.engine = .off
+                print ("Вы заглушили движок")
+        }
+    }
+    
+    func deception() {
+        print ("Марка: \(mark) | Год выпуска: \(year) | Объем багажника: \(trunkVolume) литров | \(engine.rawValue) | \(windows.rawValue)")
+    }
+    
+    init (mark: String, year: Int, windows: WindowsStatus, engine: EngineStatus, trunkVolume: Int) {
+        self.mark = mark
+        self.year = year 
+        self.windows = windows 
+        self.engine = engine 
+        self.trunkVolume = trunkVolume 
+        freeVolume = trunkVolume
+    }
+}
+
+var bmwCar = Car(mark: "BMW", year: 1998, windows: .closed, engine: .on, trunkVolume: 500)
+bmwCar.deception()
+bmwCar.actionWindows()
+bmwCar.actionEngine()
+
+print ("//////////////")
+
+class TrunkCar: Car {
+    var trailer: StatusTrailer
+    var petrol: Int
+    
+    enum StatusTrailer: String {
+        case attached = "Трейлер прикреплен"
+        case detached = "Трейлер не прикреплен"
+    }
+    
+    func drive (km: Int) { 
+        petrol -= (km/4)
+        if petrol &lt;= 0 {
+            engine = .on
+            print ("У вас кончился бензин, вы не можете дальше поехать.")
+        } else {
+            print ("Вы проехали \(km) км. У вас осталось \(petrol) литров бензина.")
+            engine = .off
+        }
+    }
+    
+    func refueling (liters: Int) { 
+        petrol = liters
+        print ("Вы заправились на \(liters) литров")
+    }
+    
+        func actionTrailer() {
+            switch trailer {
+            case .attached:
+                self.trailer = .detached
+                print ("Вы отцепили прицеп")
+                case .detached:
+                    self.trailer = .attached
+                    print ("Вы прикрепили прицеп")
+            }
+        }
+    
+    init(mark: String, year: Int, windows: WindowsStatus, engine: EngineStatus, trunkVolume: Int, trailer: StatusTrailer, petrol: Int) {
+        self.petrol = petrol
+        self.trailer = trailer
+        super.init(mark: mark, year: year, windows: windows, engine: engine, trunkVolume: trunkVolume)
+    }
+    
+    override func deception() {
+        print ("Марка: \(mark) | Год выпуска: \(year) | Объем багажника: \(trunkVolume) литров | \(engine.rawValue) | \(windows.rawValue) \nДоп. информация: \(petrol) литов бензина | \(trailer.rawValue)")
+    }
+    
+}
+
+
+var bigCar = TrunkCar(mark: "ВАЗ", year: 1998, windows: .closed, engine: .on, trunkVolume: 500, trailer: .detached, petrol: 50)
+bigCar.deception()
+bigCar.actionTrailer()
+bigCar.drive(km: 30)
+bigCar.drive(km: 400)
+bigCar.refueling(liters: 70)
+
+
+print ("////////////////////////////")
+
+class SportCar: Car {
+    var color: StatusColor
+    var luke: StatusLuke
+    var maximumSpeed: Int
+    
+    enum StatusColor: String {
+    case green = "🟢"
+    case red = "🔴"
+        case yellow = "🟡"
+        case orange = "🟠"
+    }
+    
+    
+    enum StatusLuke: String {
+        case open = "Люк открыт"
+        case closed = "Люк закрыт"
+    }
+    
+    func actionLunk() {
+        switch luke {
+        case .open:
+            self.luke = .closed
+            print ("Вы закрыли люк")
+            case .closed:
+            self.luke = .open
+                print ("Вы открыли люк")
+        }
+        
+    }
+    
+    override func deception() {
+        print ("Марка: \(mark) | Год выпуска: \(year) | Объем багажника: \(trunkVolume) литров | \(engine.rawValue) | \(windows.rawValue) \nДоп. информация: Цвет \(color.rawValue)| Максимальная скорость: \(maximumSpeed) км в час | \(luke.rawValue)")
+    }
+    
+    init(mark: String, year: Int, windows: WindowsStatus, engine: EngineStatus, trunkVolume: Int, color: StatusColor, luke :StatusLuke, maximumSpeed: Int ) {
+        self.maximumSpeed = maximumSpeed
+        self.luke = luke
+        self.color = color
+        super.init(mark: mark, year: year, windows: windows, engine: engine, trunkVolume: trunkVolume)
+    }
+    
+}
+
+var superCar = SportCar(mark: "Lamborghini", year: 2018, windows: .closed, engine: .on, trunkVolume: 50, color: .red, luke: .closed, maximumSpeed: 250)
+superCar.deception()
+superCar.maximumSpeed
+superCar.actionLunk()
+superCar.loadCargo(cargo: 20)
+superCar.unloadСargo(cargo: 15)
+</string>
+			<key>ModifiedRange</key>
+			<string>{1, 5854}</string>
+			<key>OriginalContent</key>
+			<string></string>
+			<key>OriginalRange</key>
+			<string>{1, 0}</string>
+		</dict>
+	</array>
+	<key>File</key>
+	<string>Chapters/Chapter1.playgroundchapter/Pages/My Playground.playgroundpage/main.swift</string>
+</dict>
+</plist>
